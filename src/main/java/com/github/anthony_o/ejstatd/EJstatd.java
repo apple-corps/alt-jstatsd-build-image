@@ -147,8 +147,8 @@ public class EJstatd {
         }
 
         System.out.println("using ejstatd.remoteVm.port : " + System.getProperty("ejstatd.remoteVm.port"));
-        System.out.println("using remoteHostPort : " + remoteHostPort);
-        System.out.println("using rminame : " + rminame);
+        System.out.println("using ejstatd.remoteHost.port : " + remoteHostPort);
+        System.out.println("using rmiName : " + rminame);
 
         if (System.getProperty("java.security.policy") == null) {
             // Add "permission java.security.AllPermission" for the codebase of this class by default
