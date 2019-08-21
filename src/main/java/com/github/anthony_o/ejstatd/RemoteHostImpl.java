@@ -25,21 +25,17 @@
 
 package com.github.anthony_o.ejstatd;
 
-import sun.jvmstat.monitor.MonitorException;
-import sun.jvmstat.monitor.MonitoredHost;
-import sun.jvmstat.monitor.MonitoredVm;
-import sun.jvmstat.monitor.VmIdentifier;
+import sun.jvmstat.monitor.*;
 import sun.jvmstat.monitor.event.HostEvent;
 import sun.jvmstat.monitor.event.HostListener;
 import sun.jvmstat.monitor.event.VmStatusChangeEvent;
-import sun.jvmstat.monitor.remote.BufferedMonitoredVm;
 import sun.jvmstat.monitor.remote.RemoteHost;
 import sun.jvmstat.monitor.remote.RemoteVm;
 
 import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Concrete implementation of the RemoteHost interface for the HotSpot
