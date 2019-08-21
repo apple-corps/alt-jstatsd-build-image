@@ -38,7 +38,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.security.CodeSource;
 import java.util.*;
 
 /**
@@ -163,45 +162,45 @@ public class EJstatd {
             StackTraceElement trace[] = Thread.currentThread().getStackTrace();
             currentRunningClass = Class.forName(trace[trace.length - 1].getClassName());
 
-            if (Thread.class.isAssignableFrom(currentRunningClass)) {
-                // This is only a Thread, we must know the class which is run by this Thread, happens when launching from Maven
-                String className = trace[trace.length - 2].getClassName();
-                try {
-                    currentRunningClass = Class.forName(className);
-                } catch (ClassNotFoundException e) {
-                    // Happens when launching from Maven because the class launched by this Thread is not loaded by this Thread's ClassLoader. We will use the main's Thread ClassLoader to get this class
-                    // Detecting main Thread thanks to http://stackoverflow.com/a/939995/535203
-                    Map<Thread, StackTraceElement[]> stackTraceMap = Thread.getAllStackTraces();
-                    for (Thread thread : stackTraceMap.keySet()) {
-                        if ("main".equals(thread.getName())) {
-                            // This is the main thread, we now use its classloader
-                            ClassLoader mainClassLoader = thread.getContextClassLoader();
-                            currentRunningClass = mainClassLoader.loadClass(className);
-                            // Also add other classes that needs those permissions
-                            StackTraceElement[] mainStackTrace = thread.getStackTrace();
-                            classesToAllow.add(mainClassLoader.loadClass(mainStackTrace[mainStackTrace.length - 1].getClassName())); // the real main called by Maven
-                            classesToAllow.add(mainClassLoader.loadClass("org.apache.maven.DefaultMaven"));
-                            classesToAllow.add(mainClassLoader.loadClass("org.apache.maven.cli.MavenCli"));
-                            break;
-                        }
-                    }
-                }
-            }
+//            if (Thread.class.isAssignableFrom(currentRunningClass)) {
+//                // This is only a Thread, we must know the class which is run by this Thread, happens when launching from Maven
+//                String className = trace[trace.length - 2].getClassName();
+//                try {
+//                    currentRunningClass = Class.forName(className);
+//                } catch (ClassNotFoundException e) {
+//                    // Happens when launching from Maven because the class launched by this Thread is not loaded by this Thread's ClassLoader. We will use the main's Thread ClassLoader to get this class
+//                    // Detecting main Thread thanks to http://stackoverflow.com/a/939995/535203
+//                    Map<Thread, StackTraceElement[]> stackTraceMap = Thread.getAllStackTraces();
+//                    for (Thread thread : stackTraceMap.keySet()) {
+//                        if ("main".equals(thread.getName())) {
+//                            // This is the main thread, we now use its classloader
+//                            ClassLoader mainClassLoader = thread.getContextClassLoader();
+//                            currentRunningClass = mainClassLoader.loadClass(className);
+//                            // Also add other classes that needs those permissions
+//                            StackTraceElement[] mainStackTrace = thread.getStackTrace();
+//                            classesToAllow.add(mainClassLoader.loadClass(mainStackTrace[mainStackTrace.length - 1].getClassName())); // the real main called by Maven
+//                            classesToAllow.add(mainClassLoader.loadClass("org.apache.maven.DefaultMaven"));
+//                            classesToAllow.add(mainClassLoader.loadClass("org.apache.maven.cli.MavenCli"));
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
 
             classesToAllow.add(currentRunningClass);
-            if (!currentRunningClass.equals(EJstatd.class)) {
-                // we are running from another main, adding also EJstatd.class
-                classesToAllow.add(EJstatd.class);
-            }
-            classesToAllow.add(RemoteHost.class); // used to allow JDK's tools.jar
-
-            Set<String> codebasesToAllow = new HashSet<String>();
-            for (Class<?> klass : classesToAllow) {
-                CodeSource codeSource = klass.getProtectionDomain().getCodeSource();
-                if (codeSource != null) {
-                    codebasesToAllow.add(codeSource.getLocation().toURI().toString());
-                }
-            }
+//            if (!currentRunningClass.equals(EJstatd.class)) {
+//                // we are running from another main, adding also EJstatd.class
+//                classesToAllow.add(EJstatd.class);
+//            }
+//            classesToAllow.add(RemoteHost.class); // used to allow JDK's tools.jar
+//
+//            Set<String> codebasesToAllow = new HashSet<String>();
+//            for (Class<?> klass : classesToAllow) {
+//                CodeSource codeSource = klass.getProtectionDomain().getCodeSource();
+//                if (codeSource != null) {
+//                    codebasesToAllow.add(codeSource.getLocation().toURI().toString());
+//                }
+//            }
 
             FileOutputStream policyOutputStream = new FileOutputStream(policyFile);
             try {
@@ -211,7 +210,7 @@ public class EJstatd {
                 //                    }
                 //                    policyOutputStream.write(("grant codebase \""+codebase+"\" {permission java.security.AllPermission;};").getBytes());
                 //                }
-                policyOutputStream.write(("grant {permission java.security.AllPermission;};").getBytes());
+                policyOutputStream.write(("grant { \n\t\t permission java.security.AllPermission;\n};").getBytes());
             } finally {
                 policyOutputStream.close();
             }
