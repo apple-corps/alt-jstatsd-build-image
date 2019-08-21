@@ -38,7 +38,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.*;
 
 /**
  * Application providing remote access to the jvmstat instrumentation exported by local Java Virtual Machine processes.
@@ -145,9 +144,7 @@ public class EJstatd {
             System.exit(1);
         }
 
-        System.out.println("using ejstatd.remoteVm.port : " + System.getProperty("ejstatd.remoteVm.port"));
-        System.out.println("using ejstatd.remoteHost.port : " + remoteHostPort);
-        System.out.println("using rmiName : " + rminame);
+
 
         if (System.getProperty("java.security.policy") == null) {
             // Add "permission java.security.AllPermission" for the codebase of this class by default
@@ -155,12 +152,12 @@ public class EJstatd {
             policyFile.deleteOnExit();
 
             // Adding "permission java.security.AllPermission" for this jar + JDK tools.jar + eventually the main jar launching this (needed because if we run from IntelliJ the main class really launched is not this one)
-            Collection<Class<?>> classesToAllow = new ArrayList<Class<?>>();
-
-            Class<?> currentRunningClass;
-            // detecting the class which runs EJstatd in order to add permission to it too (happens when launching from Maven) thanks to http://stackoverflow.com/a/36949543/535203
-            StackTraceElement trace[] = Thread.currentThread().getStackTrace();
-            currentRunningClass = Class.forName(trace[trace.length - 1].getClassName());
+//            Collection<Class<?>> classesToAllow = new ArrayList<Class<?>>();
+//
+//            Class<?> currentRunningClass;
+//            // detecting the class which runs EJstatd in order to add permission to it too (happens when launching from Maven) thanks to http://stackoverflow.com/a/36949543/535203
+//            StackTraceElement trace[] = Thread.currentThread().getStackTrace();
+//            currentRunningClass = Class.forName(trace[trace.length - 1].getClassName());
 
 //            if (Thread.class.isAssignableFrom(currentRunningClass)) {
 //                // This is only a Thread, we must know the class which is run by this Thread, happens when launching from Maven
@@ -187,7 +184,7 @@ public class EJstatd {
 //                }
 //            }
 
-            classesToAllow.add(currentRunningClass);
+//            classesToAllow.add(currentRunningClass);
 //            if (!currentRunningClass.equals(EJstatd.class)) {
 //                // we are running from another main, adding also EJstatd.class
 //                classesToAllow.add(EJstatd.class);
@@ -233,9 +230,13 @@ public class EJstatd {
 
         name.append("/").append(rminame);
 
+        System.out.println("using ejstatd.remoteVm.port : " + System.getProperty("ejstatd.remoteVm.port"));
+        System.out.println("using ejstatd.remoteHost.port : " + remoteHostPort);
+        System.out.println("using rmiName : " + rminame);
+
         try {
             // use 1.5.0 dynamically generated subs.
-            System.setProperty("java.rmi.server.ignoreSubClasses", "true");
+//            System.setProperty("java.rmi.server.ignoreSubClasses", "true");
             RemoteHostImpl remoteHost = new RemoteHostImpl();
             RemoteHost stub = (RemoteHost) UnicastRemoteObject.exportObject(remoteHost, remoteHostPort);
             bind(name.toString(), remoteHost);
