@@ -35,6 +35,7 @@
 
 
     <build>
+        <finalName>ejstatd</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
