@@ -42,9 +42,8 @@ import java.security.CodeSource;
 import java.util.*;
 
 /**
- * Application providing remote access to the jvmstat instrumentation
- * exported by local Java Virtual Machine processes. Remote access is
- * provided through an RMI interface.
+ * Application providing remote access to the jvmstat instrumentation exported by local Java Virtual Machine processes.
+ * Remote access is provided through an RMI interface.
  *
  * @author Brian Doherty
  * @since 1.5
@@ -59,8 +58,7 @@ public class EJstatd {
         System.err.println("usage: ejstatd [-nr] [-pr port] [-ph port] [-pv port] [-n rminame]");
     }
 
-    static void bind(String name, RemoteHostImpl remoteHost)
-                throws RemoteException, MalformedURLException, Exception {
+    static void bind(String name, RemoteHostImpl remoteHost) throws RemoteException, MalformedURLException, Exception {
 
         try {
             Naming.rebind(name, remoteHost);
@@ -73,10 +71,8 @@ public class EJstatd {
                 int localport = (port < 0) ? Registry.REGISTRY_PORT : port;
                 registry = LocateRegistry.createRegistry(localport);
                 bind(name, remoteHost);
-            }
-            else {
-                System.out.println("Could not contact registry\n"
-                                   + e.getMessage());
+            } else {
+                System.out.println("Could not contact registry\n" + e.getMessage());
                 e.printStackTrace();
             }
         } catch (RemoteException e) {
@@ -90,7 +86,7 @@ public class EJstatd {
         int argc = 0;
         int remoteHostPort = Integer.parseInt(System.getProperty("ejstatd.remoteHost.port", "0"));
 
-        for ( ; (argc < args.length) && (args[argc].startsWith("-")); argc++) {
+        for (; (argc < args.length) && (args[argc].startsWith("-")); argc++) {
             String arg = args[argc];
 
             if (arg.compareTo("-nr") == 0) {
@@ -99,12 +95,12 @@ public class EJstatd {
                 if (arg.compareTo("-pr") != 0) {
                     port = Integer.parseInt(arg.substring(3));
                 } else {
-                  argc++;
-                  if (argc >= args.length) {
-                      printUsage();
-                      System.exit(1);
-                  }
-                  port = Integer.parseInt(args[argc]);
+                    argc++;
+                    if (argc >= args.length) {
+                        printUsage();
+                        System.exit(1);
+                    }
+                    port = Integer.parseInt(args[argc]);
                 }
             } else if (arg.startsWith("-ph")) {
                 if (arg.compareTo("-ph") != 0) {
@@ -149,6 +145,10 @@ public class EJstatd {
             printUsage();
             System.exit(1);
         }
+
+        System.out.println("using ejstatd.remoteVm.port : " + System.getProperty("ejstatd.remoteVm.port"));
+        System.out.println("using remoteHostPort : " + remoteHostPort);
+        System.out.println("using rminame : " + rminame);
 
         if (System.getProperty("java.security.policy") == null) {
             // Add "permission java.security.AllPermission" for the codebase of this class by default
@@ -205,13 +205,13 @@ public class EJstatd {
 
             FileOutputStream policyOutputStream = new FileOutputStream(policyFile);
             try {
-//                for (String codebase : codebasesToAllow) {
-//                    if (codebase.endsWith("/")) {
-//                        codebase += "-"; // in development, we are launching from a folder with compiled classes in it
-//                    }
-//                    policyOutputStream.write(("grant codebase \""+codebase+"\" {permission java.security.AllPermission;};").getBytes());
-//                }
-                    policyOutputStream.write(("grant {permission java.security.AllPermission;};").getBytes());
+                //                for (String codebase : codebasesToAllow) {
+                //                    if (codebase.endsWith("/")) {
+                //                        codebase += "-"; // in development, we are launching from a folder with compiled classes in it
+                //                    }
+                //                    policyOutputStream.write(("grant codebase \""+codebase+"\" {permission java.security.AllPermission;};").getBytes());
+                //                }
+                policyOutputStream.write(("grant {permission java.security.AllPermission;};").getBytes());
             } finally {
                 policyOutputStream.close();
             }
@@ -238,25 +238,21 @@ public class EJstatd {
             // use 1.5.0 dynamically generated subs.
             System.setProperty("java.rmi.server.ignoreSubClasses", "true");
             RemoteHostImpl remoteHost = new RemoteHostImpl();
-            RemoteHost stub = (RemoteHost) UnicastRemoteObject.exportObject(
-                    remoteHost, remoteHostPort);
+            RemoteHost stub = (RemoteHost) UnicastRemoteObject.exportObject(remoteHost, remoteHostPort);
             bind(name.toString(), remoteHost);
         } catch (MalformedURLException e) {
             if (rminame != null) {
                 System.out.println("Bad RMI server name: " + rminame);
             } else {
-                System.out.println("Bad RMI URL: " + name + " : "
-                                   + e.getMessage());
+                System.out.println("Bad RMI URL: " + name + " : " + e.getMessage());
             }
             System.exit(1);
         } catch (java.rmi.ConnectException e) {
             // could not attach to or create a registry
-            System.out.println("Could not contact RMI registry\n"
-                               + e.getMessage());
+            System.out.println("Could not contact RMI registry\n" + e.getMessage());
             System.exit(1);
         } catch (Exception e) {
-            System.out.println("Could not create remote object\n"
-                               + e.getMessage());
+            System.out.println("Could not create remote object\n" + e.getMessage());
             e.printStackTrace();
             System.exit(1);
         }
