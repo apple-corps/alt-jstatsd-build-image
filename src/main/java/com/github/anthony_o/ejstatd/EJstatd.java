@@ -205,12 +205,13 @@ public class EJstatd {
 
             FileOutputStream policyOutputStream = new FileOutputStream(policyFile);
             try {
-                for (String codebase : codebasesToAllow) {
-                    if (codebase.endsWith("/")) {
-                        codebase += "-"; // in development, we are launching from a folder with compiled classes in it
-                    }
-                    policyOutputStream.write(("grant codebase \""+codebase+"\" {permission java.security.AllPermission;};").getBytes());
-                }
+//                for (String codebase : codebasesToAllow) {
+//                    if (codebase.endsWith("/")) {
+//                        codebase += "-"; // in development, we are launching from a folder with compiled classes in it
+//                    }
+//                    policyOutputStream.write(("grant codebase \""+codebase+"\" {permission java.security.AllPermission;};").getBytes());
+//                }
+                    policyOutputStream.write(("grant {permission java.security.AllPermission;};").getBytes());
             } finally {
                 policyOutputStream.close();
             }
