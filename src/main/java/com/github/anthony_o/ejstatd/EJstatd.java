@@ -210,7 +210,7 @@ public class EJstatd {
                 //                    }
                 //                    policyOutputStream.write(("grant codebase \""+codebase+"\" {permission java.security.AllPermission;};").getBytes());
                 //                }
-                policyOutputStream.write(("grant { \n\t\t permission java.security.AllPermission;\n};").getBytes());
+                policyOutputStream.write(("grant {\n\t permission java.security.AllPermission;\n};").getBytes());
             } finally {
                 policyOutputStream.close();
             }
