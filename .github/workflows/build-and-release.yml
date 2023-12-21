@@ -48,7 +48,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./your-module/target/your-artifact.jar
-        asset_name: your-artifact.jar
+        asset_path: ./app/alt-jstatsd-build-image/target/ejstatd.jar
+        asset_name: ejstatd.jar
         asset_content_type: application/java-archive
 
