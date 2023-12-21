@@ -6,7 +6,7 @@ A firewall and Docker friendly and Java policy free version of [`jstatd`](http:/
 
 With `ejstatd` you can control those ports using those 3 parameters: (in addition to classical `-p` to control RMI registry port):
  - `-pr <port>`: specify the port on which the RMI registry will start (like `jstatd`'s `-p`)
- - `-ph <port>` (or setting the port number to JVM system property `ejstatd.remoteHost.port`): control the port on which the `sun.jvmstat.monitor.remote.RemoteHost` will be exported.
+ - `-ph <port>` (or setting the port number to JVM system property `ejstatd.remoteHost.port`): control the port on which the `sun.jvmstat.monitor.remote._RemoteHost_` will be exported.
  - `-pv <port>` (or setting the port number to JVM system property `ejstatd.remoteVm.port`): control the port on which the `sun.jvmstat.monitor.remote.RemoteVm` will be exported.
 
 `ejstatd` also gets rid of `jstatd` usual [`access denied ("java.util.PropertyPermission" "java.rmi.server.ignoreSubClasses" "write")`](http://stackoverflow.com/q/9939883/535203) problem without defining a `java.security.policy` system property: it writes its own needed java policy file and use it (if you don't define this system property using `-Djava.security.policy`).

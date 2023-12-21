@@ -25,7 +25,7 @@
 
 package com.github.anthony_o.ejstatd;
 
-import sun.jvmstat.monitor.remote.BufferedMonitoredVm;
+import sun.jvmstat.monitor.BufferedMonitoredVm;
 import sun.jvmstat.monitor.remote.RemoteVm;
 
 /**
