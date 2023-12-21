@@ -23,3 +23,27 @@ jobs:
         with:
           name: Package
           path: staging
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Package
+          path: staging
+
+      - name: Publish Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: staging/*
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          title: Release v${{ github.run_number }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
